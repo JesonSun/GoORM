@@ -2,6 +2,7 @@ package session
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"testing"
 
@@ -16,7 +17,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	TestDB, _ = sql.Open("sqlite3", "../gee.db")
+	TestDB, _ = sql.Open("mysql", "../gee.db")
 	code := m.Run()
 	_ = TestDB.Close()
 	os.Exit(code)
@@ -41,6 +42,7 @@ func TestSession_QueryRows(t *testing.T) {
 	_, _ = s.Raw("DROP TABLE IF EXISTS User;").Exec()
 	_, _ = s.Raw("CREATE TABLE User(Name text);").Exec()
 	row := s.Raw("SELECT count(*) FROM User").QueryRow()
+	fmt.Println(row)
 	var count int
 	if err := row.Scan(&count); err != nil || count != 0 {
 		t.Fatal("failed to query db", err)
