@@ -20,14 +20,11 @@ var (
 func main() {
 	engine, _ := GoORM.NewEngine("mysql", "root:123456@(localhost)/douyin?charset=utf8mb4&parseTime=True&loc=Local")
 	defer engine.Close()
-	s := engine.NewSession().Model(&User{})
-	err1 := s.DropTable()
-	err2 := s.CreateTable()
-	if err1 != nil || err2 != nil {
-		fmt.Println("error12")
+	s := engine.NewSession()
+	var users []User
+	err := s.First(&users)
+	if err != nil {
+		fmt.Println(err.Error())
 	}
-	affected, err := s.Insert(user3)
-	if err != nil || affected != 1 {
-		fmt.Println("error")
-	}
+	fmt.Println(users)
 }
